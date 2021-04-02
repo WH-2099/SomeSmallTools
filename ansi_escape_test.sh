@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+VERSION='0.3.0'
+
 # 基础颜色测试
 basic_color_test() {
     local test_string test_string
@@ -37,7 +39,7 @@ basic_color_test() {
         fi
     done
 
-    printf '\nBasic Color Test -- Foregound and Background: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
+    printf '\n  Basic Color Test -- Foregound and Background: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
     printf '    '
     for b in $background; do
         # 设置前景色（字体颜色）为对应背景色
@@ -57,7 +59,7 @@ basic_color_test() {
 # rgb 颜色测试
 rgb_color_test() {
     local rgb_color=$(echo {16..231})
-    printf 'RGB Color Test -- Foreground: ESC[38;5;\e[96m#\e[mm  Background: ESC[48;5;\e[96m#\e[mm\n'
+    printf '  RGB Color Test -- Foreground: ESC[38;5;\e[96m#\e[mm  Background: ESC[48;5;\e[96m#\e[mm\n'
     printf '                     \e[96m#\e[m = 16 + 36 × \e[91mR\e[m + 6 × \e[92mG\e[m + \e[30;107mB\e[m (0 ≤ R, G, B ≤ 5)\n\n'
     for c in $rgb_color; do
         printf '\e[38;5;%dm%4d\e[m' $c $c
@@ -71,7 +73,7 @@ rgb_color_test() {
 # 灰度颜色测试
 grayscale_color_test() {
     local grayscale_color=$(echo {232..255})
-    printf 'Grayscale Color Test -- Foreground: ESC[38;5;\e[96m#\e[mm  Background: ESC[48;5;\e[96m#\e[mm\n\n'
+    printf '  Grayscale Color Test -- Foreground: ESC[38;5;\e[96m#\e[mm  Background: ESC[48;5;\e[96m#\e[mm\n\n'
     for c in $grayscale_color; do
         if (($c < 244)); then
             printf '\e[48;5;%dm%4d\e[m' $c $c
@@ -86,7 +88,7 @@ grayscale_color_test() {
 # 效果测试
 effect_test() {
     local effect=$(echo {0..9})
-    printf '\nEffect Test: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
+    printf '\n  Effect Test: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
     for e in $effect; do
         printf '  \e[%dm%d\e[m' $e $e
     done
@@ -96,7 +98,7 @@ effect_test() {
 # 字体测试
 font_test() {
     local font=$(echo {{10..20},{50..55}})
-    printf '\nFont Test: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
+    printf '\n  Font Test: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
 
     for f in $font; do
         printf '  %d:  \e[%dmABCabc123\e[m\n' $f $f
@@ -106,13 +108,65 @@ font_test() {
 }
 
 # TODO: 光标相关测试
+cursor_test() {
+    printf '\n  Cursor Test:\n'
 
-# TODO: 动效测试
+    # Up
+    printf '\n  -- Cursor Up: \e[92mESC[\e[93m#\e[91mA\e\e[m\n'
+    printf '                \e[93m#\e[m = the number of cell to move (default 1)\n'
+
+    for i in {0..9}; do
+        printf '\n'
+    done
+
+    local up_and_clear='\e[A\b\b\b\b\b\b\b\b'
+    for i in {0..9}; do
+        sleep 0.5
+        printf '\n\n    |  '
+        printf $up_and_clear'  / | \\'
+        printf $up_and_clear'   / \\ '
+        printf $up_and_clear'        \b\b\b\b'
+    done
+
+    for i in {0..12}; do
+        printf '\n'
+    done
+
+    # ↑ △ ▲
+    #  / \
+    # / | \
+    #   |
+    #   |
+    # TODO: ascii art dick? !!!
+
+    # Down
+    printf '\n  -- Cursor Up: \e[92mESC[\e[93m#\e[91mA\e\e[m\n'
+    printf '                \e[93m#\e[m = the number of cell to move (default 1)\n'
+
+    for i in {0..9}; do
+        printf '\n'
+    done
+
+    local up_and_clear='\e[A\b\b\b\b\b\b\b\b'
+    for i in {0..9}; do
+        sleep 0.5
+        printf '\n\n    |  '
+        printf $up_and_clear'  / | \\'
+        printf $up_and_clear'   / \\ '
+        printf $up_and_clear'        \b\b\b\b'
+    done
+
+    for i in {0..12}; do
+        printf '\n'
+    done
+
+}
+
 
 main() {
     printf '           \e[92mANSI Escape Code Support Test\e[m\n'
     printf '\e[96mplease select test mode (just entry the number):\e[m\n'
-    select mode in color effect font quit; do
+    select mode in color effect font cursor more_information quit; do
         case $mode in
         color)
             basic_color_test
@@ -126,6 +180,12 @@ main() {
             ;;
         font)
             font_test
+            ;;
+        cursor)
+            cursor_test
+            ;;
+        more_information)
+            echo 'https://en.wikipedia.org/wiki/ANSI_escape_code'
             ;;
         quit)
             exit 0
