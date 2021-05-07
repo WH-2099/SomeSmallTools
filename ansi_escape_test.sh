@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # MIT License
 #
 # Copyright (c) 2021 WH-2099
@@ -26,8 +26,8 @@ VERSION='0.3.0'
 # 基础颜色测试
 basic_color_test() {
     local test_string test_string
-    local foreground=$(echo {{30..37},{90..97}})
-    local background=$(echo {{40..47},{100..107}})
+    local foreground=({{30..37},{90..97}})
+    local background=({{40..47},{100..107}})
 
     while true; do
         read -p 'please input test string (at least 3 chars, default "ABC"): ' input_string
@@ -41,14 +41,14 @@ basic_color_test() {
 
     printf '\n  Basic Color Test -- Foregound and Background: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
     printf '    '
-    for b in $background; do
+    for b in "${background[@]}"; do
         # 设置前景色（字体颜色）为对应背景色
         printf "\e[%dm%${#test_string}d\e[m" $(($b - 10)) $b
     done
     printf '\n'
-    for f in $foreground; do
+    for f in "${foreground[@]}"; do
         printf '  \e[%dm%-4d\e[m' $f $f
-        for b in $background; do
+        for b in "${background[@]}"; do
             printf '\e[%d;%dm%s\e[m' $f $b $test_string
         done
         printf '\n'
@@ -58,12 +58,12 @@ basic_color_test() {
 
 # rgb 颜色测试
 rgb_color_test() {
-    local rgb_color=$(echo {16..231})
+    local rgb_color=({16..231})
     printf '  RGB Color Test -- Foreground: ESC[38;5;\e[96m#\e[mm  Background: ESC[48;5;\e[96m#\e[mm\n'
     printf '                     \e[96m#\e[m = 16 + 36 × \e[91mR\e[m + 6 × \e[92mG\e[m + \e[30;107mB\e[m (0 ≤ R, G, B ≤ 5)\n\n'
-    for c in $rgb_color; do
+    for c in "${rgb_color[@]}"; do
         printf '\e[38;5;%dm%4d\e[m' $c $c
-        if (($c % 24 == 15)); then
+        if ((c % 24 == 15)); then
             printf '\n'
         fi
     done
@@ -72,9 +72,9 @@ rgb_color_test() {
 
 # 灰度颜色测试
 grayscale_color_test() {
-    local grayscale_color=$(echo {232..255})
+    local grayscale_color=({232..255})
     printf '  Grayscale Color Test -- Foreground: ESC[38;5;\e[96m#\e[mm  Background: ESC[48;5;\e[96m#\e[mm\n\n'
-    for c in $grayscale_color; do
+    for c in "${grayscale_color[@]}"; do
         if (($c < 244)); then
             printf '\e[48;5;%dm%4d\e[m' $c $c
         else
@@ -87,9 +87,9 @@ grayscale_color_test() {
 
 # 效果测试
 effect_test() {
-    local effect=$(echo {0..9})
+    local effect=({0..9})
     printf '\n  Effect Test: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
-    for e in $effect; do
+    for e in "${effect[@]}"; do
         printf '  \e[%dm%d\e[m' $e $e
     done
     printf '\n\n'
@@ -97,10 +97,10 @@ effect_test() {
 
 # 字体测试
 font_test() {
-    local font=$(echo {{10..20},{50..55}})
+    local font=({{10..20},{50..55}})
     printf '\n  Font Test: \e[92mESC[\e[91m#\e[92mm\e[m\n\n'
 
-    for f in $font; do
+    for f in "${font[@]}"; do
         printf '  %d:  \e[%dmABCabc123\e[m\n' $f $f
     done
     printf '\n'
@@ -197,4 +197,4 @@ main() {
         esac
     done
 }
-main
+main "$@"
