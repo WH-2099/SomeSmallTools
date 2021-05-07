@@ -107,62 +107,37 @@ font_test() {
 
 }
 
-# TODO: 光标相关测试
+# 光标相关测试
 cursor_test() {
+    # 考虑到部分终端可能不支持 Unicode 字符
+    # 以 ASCII 内字符进行测试
     printf '\n  Cursor Test:\n'
+    printf '              \e[92mESC[\e[91mA    \e[91m↑\e[m\n'
+    printf '              \e[92mESC[\e[96mB    \e[96m↓\e[m\n'
 
-    # Up
-    printf '\n  -- Cursor Up: \e[92mESC[\e[93m#\e[91mA\e\e[m\n'
-    printf '                \e[93m#\e[m = the number of cell to move (default 1)\n'
-
-    for i in {0..9}; do
+    local up='\e[A'
+    local down='\e[B'
+    local clear='\b\b\b\b\b\b\b\b\b'
+    for i in {0..10}; do
         printf '\n'
     done
-
-    local up_and_clear='\e[A\b\b\b\b\b\b\b\b'
-    for i in {0..9}; do
-        sleep 0.5
-        printf '\n\n    |  '
-        printf $up_and_clear'  / | \\'
-        printf $up_and_clear'   / \\ '
-        printf $up_and_clear'        \b\b\b\b'
-    done
-
-    for i in {0..12}; do
-        printf '\n'
-    done
-
-    # ↑ △ ▲
-    #  / \
-    # / | \
-    #   |
-    #   |
-    # TODO: ascii art dick? !!!
-
-    # Down
-    printf '\n  -- Cursor Up: \e[92mESC[\e[93m#\e[91mA\e\e[m\n'
-    printf '                \e[93m#\e[m = the number of cell to move (default 1)\n'
+    printf '      ◯ ◯'
+    printf $up$clear'      /┯\'
 
     for i in {0..9}; do
-        printf '\n'
+        sleep 0.3
+        printf $clear'      | |'
+        printf $up$clear'      /┯\'
     done
 
-    local up_and_clear='\e[A\b\b\b\b\b\b\b\b'
-    for i in {0..9}; do
-        sleep 0.5
-        printf '\n\n    |  '
-        printf $up_and_clear'  / | \\'
-        printf $up_and_clear'   / \\ '
-        printf $up_and_clear'        \b\b\b\b'
+    for i in {0..10}; do
+        printf $down
     done
-
-    for i in {0..12}; do
-        printf '\n'
-    done
-
+    printf '\n'
+    
 }
 
-
+# 主流程
 main() {
     printf '           \e[92mANSI Escape Code Support Test\e[m\n'
     printf '\e[96mplease select test mode (just entry the number):\e[m\n'
@@ -185,7 +160,7 @@ main() {
             cursor_test
             ;;
         more_information)
-            echo 'https://en.wikipedia.org/wiki/ANSI_escape_code'
+            echo -e '\nhttps://en.wikipedia.org/wiki/ANSI_escape_code\n'
             ;;
         quit)
             exit 0
