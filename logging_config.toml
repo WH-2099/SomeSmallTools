@@ -1,0 +1,125 @@
+# Logging Config Template
+# MIT License
+#
+# Copyright (c) 2021 WH-2099
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the 'Software'), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# how to use = logging.config.dictConfig()
+
+version = 1 # 必须，版本默认为1
+
+#incremental = false     # 启用后仅有部分设置会生效
+#disable_existing_loggers = true # 
+
+[loggers]
+#name =
+#level = 'NOTSET'
+#handlers = []
+#propagate = true
+#filters = []
+
+
+[root]
+#level = 'WARNING'
+#handlers = []
+#filters = []
+
+
+[handlers]
+
+[handlers.CONSOLE]
+class = 'logging.StreamHandler'
+#输出到控制台
+#level =
+#formatter =
+#filters = []
+#stream = 'sys.stderr'
+
+[handlers.FILE]
+filename = '.log'
+mode = 'a'
+encoding = 'utf-8'
+delay = false
+class = 'logging.FileHandler'
+errors = ''
+#输出到文件
+#level =
+#formatter =
+#filters = []
+
+[handlers.RFILE]
+class = 'logging.handlers.RotatingFileHandler'
+filename = ''
+mode = ''
+encoding = ''
+delay = ''
+errors = ''
+#轮换日志，到指定大小自动切分
+#level =
+#formatter =
+#filters = []
+maxBytes = 10485760 #10MB
+backupCount = 2
+
+[handlers.TRFILE]
+class = 'logging.handlers.TimedRotatingFileHandler'
+filename = ''
+encoding = ''
+delay = ''
+errors = ''
+#时间轮换日志，到指定时间自动切分
+#level =
+#formatter =
+#filters = []
+when = 'H' # 'S'秒 'M'分 'H'时 'D'天 'midnight' 'W0'-'W6'工作日(W0=星期一)
+interval = 12 # when*interval
+backupCount = 2
+#utc = false
+
+
+[filters]
+#filterName =
+#name = 要过滤的logger的名称
+
+
+[formatters]
+# %(asctime)s
+# %(funcName)s
+# %(levelname)s
+# %(message)s
+# %(name)s
+# %(module)s
+# %(filename)s
+# %(pathname)s
+# %(process)d
+# %(processName)s
+# %(thread)d
+# %(threadName)s
+[formatters.ALL]
+format = '%(asctime)s@%(process)d-%(processName)s#%(thread)d-%(threadName)s#%(pathname)s#%(name)s-%(levelname)s#%(funcName)s-%(message)s'
+
+[formatters.DEFAULT]
+format = '%(asctime)s @ %(threadName)s-%(filename)s # %(name)s-%(levelname)s-%(message)s'
+
+[formatters.LESS]
+format = '%(asctime)s @ %(module)s - %(name)s - %(levelname)s - %(message)s'
+
+[formatters.MORE]
+format = '%(asctime)s@%(process)d-%(thread)d-%(pathname)s#%(name)s-%(levelname)s#%(funcName)s-%(message)s'

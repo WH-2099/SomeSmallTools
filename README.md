@@ -7,7 +7,7 @@
 
 ## 文件列表及简单说明
 > ansi_escape_test.sh
-> > ANSI 转义字符测试（颜色、字体、特效）
+> > ANSI 转义字符测试脚本（颜色、字体、特效、光标移动）
 > 
-> logging_config.yml
-> > python 标准库 logging 模块配置模板（带注释）
+> logging_config.toml
+> > python 标准库 logging 模块配置模板（带说明注释）
